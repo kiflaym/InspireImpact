@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireImpact</title>
+    <style>
+        /* =========================================
+            FONT DEFINITIONS (Minerva Modern)
+            ========================================= */
+        @font-face {
+            font-family: 'Minerva Modern';
+            src: local('Minerva Modern Regular');
+            font-weight: 400; /* Regular */
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Minerva Modern';
+            src: local('Minerva Modern Black');
+            font-weight: 900; /* Black */
+            font-style: normal;
+        }
+
+        /* =========================================
+            GLOBAL VARIABLES & RESET
+            ========================================= */
+        :root {
+            --bg-color: #000000;
+            --text-main: #ffffff;
+            --accent: #FD7F38;
+            --font-family: 'Minerva Modern', 'Georgia', serif; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 400; /* Regular */
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: 900; /* Black */
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: var(--text-main);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            font-family: var(--font-family);
+        }
+
+        a:hover {
+            color: var(--accent);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 140px 0;
+        }
+
+        /* =========================================
+            DYNAMIC SCROLL REVEAL ANIMATIONS
+            ========================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1), 
+                        transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+            will-change: transform, opacity;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Verzögerungen für eleganten "Staggered"-Effekt */
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+
+        /* =========================================
+            NAVIGATION (Dynamic State change)
+            ========================================= */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+            transition: padding 0.4s ease, background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        /* Wird via JS getriggert, wenn der User scrollt */
+        header.scrolled {
+            padding: 18px 5%;
+            background: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo img {
+            height: 45px;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        
+        header.scrolled .logo img {
+            transform: scale(0.95);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900; /* Black */
+            position: relative;
+        }
+
+        /* Edler Underline-Effekt bei Hover */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--accent);
+            transition: width 0.4s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* =========================================
+            HERO SECTION (HOME)
+            ========================================= */
+        #home {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 1100px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 5vw, 5.5rem);
+            line-height: 1.2;
+            margin-bottom: 35px;
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .hero-content p {
+            font-size: clamp(1.2rem, 2vw, 1.7rem);
+            font-weight: 400;
+            color: #e5e5e5;
+            max-width: 900px;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+            SERVICES SECTION
+            ========================================= */
+        #services {
+            background-color: var(--bg-color);
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 120px;
+            font-weight: 900;
+        }
+
+        .services-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 140px; 
+        }
+
+        .service-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 80px;
+            width: 100%;
+        }
+
+        .service-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .service-image {
+            flex: 1 1 50%;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: cover;
+            filter: grayscale(15%);
+            transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            display: block;
+        }
+
+        .wise-leaders-img {
+            object-position: top center !important;
+        }
+
+        .service-row:hover .service-image img {
+            filter: grayscale(0%);
+            transform: scale(1.04); /* Subtiler Zoom-Effekt bei Hover */
+        }
+
+        .service-text {
+            flex: 1 1 50%;
+        }
+
+        .service-text h3 {
+            font-size: 2.8rem;
+            color: var(--accent);
+            margin-bottom: 25px;
+            font-weight: 900;
+        }
+
+        .service-text p {
+            font-size: 1.3rem;
+            color: #cccccc;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* =========================================
+            ABOUT US SECTION
+            ========================================= */
+        #about {
+            background-color: var(--bg-color);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: start;
+        }
+
+        .about-visuals {
+            position: sticky;
+            top: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .about-visuals img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .founder-philosophy {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .founder-philosophy h4 {
+            color: var(--text-main);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .founder-philosophy p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .philosophy-question {
+            color: var(--accent);
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-top: 20px;
+        }
+
+        .about-biography {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .about-biography h2 {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 40px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .about-biography p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            font-weight: 400;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .about-biography p.lead-text {
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin-bottom: 35px;
+        }
+
+        .about-biography .highlight {
+            font-size: 1.5rem;
+            margin-top: 40px;
+            color: var(--accent);
+            display: inline-block;
+            font-weight: 900;
+            border-bottom: 1px solid rgba(253, 127, 56, 0.3);
+            padding-bottom: 10px;
+        }
+
+        /* =========================================
+            CONTACT SECTION & LINKEDIN
+            ========================================= */
+        #contact {
+            background-color: #000000;
+            text-align: center;
+        }
+
+        .contact-content h2 {
+            font-size: clamp(3rem, 5vw, 5rem);
+            color: var(--text-main);
+            margin-bottom: 50px;
+            font-weight: 900;
+        }
+
+        .contact-details {
+            font-size: 1.4rem;
+            font-weight: 400;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-details a.contact-link {
+            display: block;
+            font-size: 2.5rem;
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        /* LinkedIn Button Wrapper */
+        .linkedin-wrapper {
+            margin-top: 15px;
+        }
+
+        .linkedin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 12px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            transition: all 0.4s ease;
+        }
+
+        .linkedin-link svg {
+            fill: #ffffff;
+            transition: fill 0.4s ease, transform 0.4s ease;
+        }
+
+        /* LinkedIn Hover-State */
+        .linkedin-link:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: rgba(253, 127, 56, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .linkedin-link:hover svg {
+            fill: var(--accent);
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        .contact-details p {
+            margin-top: 40px;
+            color: #999999;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+            RESPONSIVE DESIGN
+            ========================================= */
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none; 
+            }
+            .service-row, .service-row:nth-child(even) {
+                flex-direction: column;
+                gap: 40px;
+            }
+            .service-image, .service-text {
+                flex: 1 1 100%;
+                width: 100%;
+                text-align: center;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+            .about-visuals {
+                position: relative;
+                top: 0;
+            }
+            .contact-details a.contact-link {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <a href="#home" class="logo">
+            <img src="https://www.image2url.com/r2/default/images/1782286501821-16adcfb9-959f-4cb0-a49c-18bb3f939adc.png" alt="InspireImpact Logo">
+        </a>
+        <nav class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#about">About Us</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <section id="home">
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="https://www.image2url.com/r2/default/videos/1781854550253-e0a25ec0-db1d-489e-b119-57b7f0cc80d0.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>We shake your present for a flourishing future!</h1>
+            <p>We create lasting impacts for our clients through customized consulting services, distinguishing ourselves with an innovative, responsible and sustainable focus.</p>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2 class="section-title reveal">Our Services</h2>
+            
+            <div class="services-layout">
+                
+                <div class="service-row reveal">
+                    <div class="service-image">
+                        <img src="https://www.image2url.com/r2/default/images/1781855537346-aad1f3b4-bdd9-4ff4-a49a-a41c6bb8c4a3.png" alt="Empowering Culture">
+                    </div>
+                    <div class="service-text">
+                        <h3>Empowering Culture</h3>
+                        <p>
+                            Cultural Evolution<br>
+                            Change Management<br>
+                            Employee Experience Design
+                        </p>
+                    </div>
+                </div>
+
+                <div class="service-row reveal">
+                    <div class="service-image">
+                        <img src="https://www.image2url.com/r2/default/images/1781855626523-44236fcc-7f06-48bf-b2c8-bfab4fbc051b.png" alt="Innovative Businesses">
+                    </div>
+                    <div class="service-text">
+                        <h3>Innovative Businesses</h3>
+                        <p>
+                            Ideation & Opportunity Identification<br>
+                            Growth & Innovation Strategy<br>
+                            Customer Experience Design
+                        </p>
+                    </div>
+                </div>
+
+                <div class="service-row reveal">
+                    <div class="service-image">
+                        <img src="https://www.image2url.com/r2/default/images/1781856126472-354cc01c-9014-49bd-b119-c001a1892385.png" alt="Sustainable Impact">
+                    </div>
+                    <div class="service-text">
+                        <h3>Sustainable Impact</h3>
+                        <p>
+                            Sustainable Strategy<br>
+                            Sustainable Implementation<br>
+                            Social Entrepreneurship
+                        </p>
+                    </div>
+                </div>
+
+                <div class="service-row reveal">
+                    <div class="service-image">
+                        <img src="https://www.image2url.com/r2/default/images/1781856183708-211e099b-4678-4ef4-a407-7924b65b7678.png" alt="Actionable Strategy">
+                    </div>
+                    <div class="service-text">
+                        <h3>Actionable Strategy</h3>
+                        <p>
+                            Vision & Strategy Development<br>
+                            Strategy Implementation<br>
+                            Strategy Progress Implementation
+                        </p>
+                    </div>
+                </div>
+
+                <div class="service-row reveal">
+                    <div class="service-image">
+                        <img class="wise-leaders-img" src="https://www.image2url.com/r2/default/images/1781856221521-60e17f17-80a0-41bb-b70c-78e9e5cebe4b.png" alt="Wise Leaders">
+                    </div>
+                    <div class="service-text">
+                        <h3>Wise Leaders</h3>
+                        <p>
+                            Leadership Coaching<br>
+                            Leadership Companionship<br>
+                            Leadership Interim
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="about-grid">
+                
+                <div class="about-visuals reveal">
+                    <img src="https://www.image2url.com/r2/default/images/1782289961495-916dfc6e-87bb-4dc2-a856-d763916096a3.jpg" alt="Kiflay Mengestabe">
+                    
+                    <div class="founder-philosophy reveal delay-1">
+                        <h4>Kiflay Mengestabe</h4>
+                        <p>Loving kindness, courage and resilience are some of my favourite words. These words have such a deep meaning in my life that they help me to become a better person and a better inhabitant of this planet.</p>
+                        <p>I believe that loving kindness allows us to respect each other and to be humble in our achievements. Courage is the core to pursue what our heart seeks. Resilience allows us to overcome the difficult situations in our lives and businesses.</p>
+                        <div class="philosophy-question">What is your inspiration for life?</div>
+                    </div>
+                </div>
+
+                <div class="about-biography reveal delay-1">
+                    <h2>Meet the Founder</h2>
+                    
+                    <p class="lead-text">In a nutshell, Kiflay spent his childhood in different countries, cultures and continents. This shaped his future to become an engineer, strategist, explorer and innovator.</p>
+                    
+                    <p>As a young child, Kiflay grew up in a small highlands town on the African continent. Later on, he experienced what it meant to be a refugee and adapt to a new culture, in Switzerland.</p>
+                    
+                    <p>During this time, Kiflay never let go of his childhood dreams and graduated as an engineer in 2018 in Switzerland. He then decided to expand his knowledge and oriented himself towards innovation, strategy, business and leadership as a consultant for prestigious Swiss-based consultancy companies.</p>
+                    
+                    <p>During his career as a consultant, Kiflay worked for Start-ups, small and medium-size enterprises as well as international corporations as well as the Swiss government in various fields.</p>
+                    
+                    <p>Kiflay's life and career have provided the perfect experimental playground to develop his entrepreneurial and leadership skills. Kiflay thrives on working with people and allowing them to meet any challenge.</p>
+                    
+                    <p>Kiflay believes that reality is more fascinating than one’s dream, as long as we work courageously toward our dreams. To him, being a pioneer means reinventing yourself and the world for the better through relentless determination.</p>
+                    
+                    <p>Realising that personal wisdom and professional maturity are endless, he spent almost a year backpacking through different cultures and continents and is currently pursuing his EMBA in "Harnessing Innovation" at EPFL.</p>
+                    
+                    <div class="highlight reveal delay-2">He would be honored to meet you, don’t hesitate to contact us.</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container reveal">
+            <div class="contact-content">
+                <h2>Let’s work together</h2>
+                <div class="contact-details">
+                    <a href="mailto:hello@inspireimpact.ch" class="contact-link">hello@inspireimpact.ch</a>
+                    <a href="tel:+41798721062" class="contact-link">(+41) 79 872 10 62</a>
+                    
+                    <div class="linkedin-wrapper">
+                        <a href="https://www.linkedin.com/in/kiflay-mengestabe-12849922a/" target="_blank" rel="noopener noreferrer" class="linkedin-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+                    </div>
+
+                    <p>Engestrasse 3<br>3012 Bern<br>Switzerland</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 1. Dynamic Header State on Scroll
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // 2. Scroll Reveal Engine (Intersection Observer)
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Sobald das Element sichtbar ist, stoppen wir die Überwachung für dieses Element
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, revealOptions);
+
+        revealElements.forEach(element => {
+            revealObserver.observe(element);
+        });
+
+        // 3. Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
