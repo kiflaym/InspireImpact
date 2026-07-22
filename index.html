@@ -1,868 +1,712 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InspireImpact</title>
-    <meta name="description" content="InspireImpact - We shake your present for a flourishing future. Strategy, Innovation & Leadership Consulting.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* =========================================
+            FONT DEFINITIONS (Minerva Modern)
+            ========================================= */
         @font-face {
-            font-family: 'MinervaModerna';
-            src: local('MinervaModerna'),
-                 local('Minerva Moderna Regular'),
-                 local('Minerva Moderna');
-            font-weight: 400;
+            font-family: 'Minerva Modern';
+            src: local('Minerva Modern Regular');
+            font-weight: 400; /* Regular */
             font-style: normal;
-            font-display: swap;
         }
+        
         @font-face {
-            font-family: 'MinervaModerna';
-            src: local('MinervaModerna Black'),
-                 local('Minerva Moderna Black');
-            font-weight: 900;
+            font-family: 'Minerva Modern';
+            src: local('Minerva Modern Black');
+            font-weight: 900; /* Black */
             font-style: normal;
-            font-display: swap;
         }
 
+        /* =========================================
+            GLOBAL VARIABLES & RESET
+            ========================================= */
         :root {
-            --bg-primary: #000000;
-            --bg-secondary: #0a0a0a;
-            --bg-tertiary: #111111;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --bg-card-hover: rgba(255, 255, 255, 0.06);
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --text-muted: #666666;
-            --text-accent: #FD7F38;
-            --text-accent-light: #ff9a62;
+            --bg-color: #000000;
+            --text-main: #ffffff;
             --accent: #FD7F38;
-            --accent-glow: rgba(253, 127, 56, 0.3);
-            --accent-glow-strong: rgba(253, 127, 56, 0.15);
-            --border-subtle: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(253, 127, 56, 0.3);
-            --font-display: 'MinervaModerna', 'Minerva Moderna', Georgia, 'Times New Roman', serif;
-            --font-body: 'MinervaModerna', 'Minerva Moderna', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-            --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
-            --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            --section-padding: 140px;
-            --container-max: 1400px;
-            --container-padding: 5%;
+            --font-family: 'Minerva Modern', 'Georgia', serif; 
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-        body { background-color: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); line-height: 1.6; overflow-x: hidden; cursor: auto; }
-        ::selection { background: var(--accent); color: #000; }
-        img { max-width: 100%; height: auto; display: block; }
-        a { color: inherit; text-decoration: none; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        .brand-text {
-            font-family: var(--font-display);
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 400; /* Regular */
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: 900; /* Black */
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: var(--text-main);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            font-family: var(--font-family);
+        }
+
+        a:hover {
             color: var(--accent);
-            display: inline-flex;
-            align-items: baseline;
-        }
-        .brand-text .brand-i {
-            font-size: 1.35em;
-            line-height: 1;
-            display: inline-block;
-            transform: translateY(0.02em);
         }
 
-        /* Loader */
-        .loader { position: fixed; inset: 0; background: var(--bg-primary); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s var(--ease-out-expo), visibility 0.8s; }
-        .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-logo { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 2rem; overflow: hidden; text-transform: uppercase; }
-        .loader-logo span { display: inline-block; opacity: 0; transform: translateY(100%); animation: loaderCharReveal 0.6s var(--ease-out-expo) forwards; }
-        .loader-logo .brand-i { font-size: 1.35em; line-height: 1; display: inline-block; transform: translateY(0.02em); }
-        @keyframes loaderCharReveal { to { opacity: 1; transform: translateY(0); } }
-        .loader-track { width: 200px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; position: relative; }
-        .loader-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--accent); animation: loaderProgress 2s var(--ease-out-expo) forwards; box-shadow: 0 0 20px var(--accent-glow); }
-        @keyframes loaderProgress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 140px 0;
+        }
 
-        /* Scroll Progress */
-        .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 10001; width: 0%; transition: width 0.1s linear; box-shadow: 0 0 10px var(--accent-glow); }
+        /* =========================================
+            DYNAMIC SCROLL REVEAL ANIMATIONS
+            ========================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1), 
+                        transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+            will-change: transform, opacity;
+        }
 
-        /* Orbs */
-        .orb { position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; opacity: 0.4; }
-        .orb-1 { width: 500px; height: 500px; background: var(--accent-glow-strong); top: -10%; right: -10%; animation: orbFloat 20s ease-in-out infinite; }
-        .orb-2 { width: 400px; height: 400px; background: rgba(253,127,56,0.08); bottom: 10%; left: -5%; animation: orbFloat 25s ease-in-out infinite reverse; }
-        .orb-3 { width: 300px; height: 300px; background: rgba(255,154,98,0.06); top: 40%; left: 30%; animation: orbFloat 18s ease-in-out infinite; animation-delay: -5s; }
-        @keyframes orbFloat { 0%,100% { transform: translate(0,0) scale(1); } 25% { transform: translate(40px,-30px) scale(1.1); } 50% { transform: translate(-20px,20px) scale(0.95); } 75% { transform: translate(30px,10px) scale(1.05); } }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        /* Nav */
-        .nav { position: fixed; top: 0; left: 0; width: 100%; padding: 28px var(--container-padding); display: flex; justify-content: space-between; align-items: center; z-index: 1000; transition: all 0.5s var(--ease-out-expo); }
-        .nav.scrolled { padding: 16px var(--container-padding); background: rgba(0,0,0,0.75); backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2); border-bottom: 1px solid var(--border-subtle); }
-        .nav-logo img { height: 42px; display: block; transition: transform 0.4s var(--ease-out-expo); }
-        .nav.scrolled .nav-logo img { transform: scale(0.9); }
-        .nav-links { display: flex; gap: 40px; align-items: center; }
-        .nav-links a { font-family: var(--font-display); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; color: var(--text-primary); position: relative; padding: 8px 0; transition: color 0.3s ease; }
-        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.4s var(--ease-out-expo); }
-        .nav-links a:hover { color: var(--accent); }
-        .nav-links a:hover::after { width: 100%; }
-        .lang-switcher { display: flex; align-items: center; gap: 8px; margin-left: 30px; padding-left: 30px; border-left: 1px solid var(--border-subtle); }
-        .lang-btn { font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 6px 10px; transition: all 0.3s ease; position: relative; }
-        .lang-btn.active { color: var(--accent); }
-        .lang-btn.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: var(--accent); border-radius: 2px; }
-        .lang-btn:hover { color: var(--text-primary); }
-        .mobile-menu-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
-        .mobile-menu-btn span { display: block; width: 28px; height: 2px; background: var(--text-primary); transition: all 0.4s var(--ease-out-expo); transform-origin: center; }
-        .mobile-menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-        .mobile-menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-        /* Hero */
-        .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 5%; overflow: hidden; }
-        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; will-change: transform; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.7) 100%); z-index: -1; }
-        .hero-content { position: relative; z-index: 1; max-width: 1100px; }
-        .hero-eyebrow { font-family: var(--font-body); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); margin-bottom: 2rem; opacity: 0; transform: translateY(30px); animation: fadeUp 0.8s var(--ease-out-expo) 2.2s forwards; }
-        .hero-title { font-family: var(--font-display); font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.1; color: var(--text-primary); margin-bottom: 1.5rem; }
-        .hero-title .line { display: block; overflow: hidden; }
-        .hero-title .line span { display: inline-block; transform: translateY(110%); animation: revealUp 1s var(--ease-out-expo) forwards; }
-        .hero-title .line:nth-child(1) span { animation-delay: 2.4s; }
-        .hero-title .line:nth-child(2) span { animation-delay: 2.6s; }
-        .hero-title .highlight { color: var(--accent); position: relative; display: inline-block; }
-        .hero-title .highlight::after { content: ''; position: absolute; bottom: 0.05em; left: -0.05em; right: -0.05em; height: 0.12em; background: var(--accent); opacity: 0.25; z-index: -1; transform: scaleX(0); transform-origin: left; animation: underlineGrow 0.8s var(--ease-out-expo) 3s forwards; }
-        .hero-subtitle { font-family: var(--font-body); font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 400; color: var(--text-secondary); max-width: 750px; margin: 0 auto 3rem; line-height: 1.7; opacity: 0; transform: translateY(30px); animation: fadeUp 0.8s var(--ease-out-expo) 2.8s forwards; }
-        .hero-cta { display: inline-flex; align-items: center; gap: 12px; padding: 1.1rem 2.5rem; background: var(--accent); color: #000; font-family: var(--font-display); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border: none; position: relative; overflow: hidden; transition: all 0.4s var(--ease-out-expo); opacity: 0; transform: translateY(30px); animation: fadeUp 0.8s var(--ease-out-expo) 3s forwards; }
-        .hero-cta::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent); transform: translateX(-100%); transition: transform 0.6s var(--ease-out-expo); }
-        .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 15px 50px var(--accent-glow); }
-        .hero-cta:hover::before { transform: translateX(100%); }
-        .hero-cta .arrow { transition: transform 0.3s var(--ease-out-expo); }
-        .hero-cta:hover .arrow { transform: translateX(5px); }
-        .scroll-hint { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.75rem; opacity: 0; animation: fadeUp 0.8s var(--ease-out-expo) 3.4s forwards; }
-        .scroll-hint span { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); }
-        .scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--accent), transparent); position: relative; overflow: hidden; }
-        .scroll-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: var(--accent); animation: scrollPulse 2.5s ease-in-out infinite; }
-        @keyframes scrollPulse { 0% { top: -100%; } 100% { top: 100%; } }
-        @keyframes revealUp { to { transform: translateY(0); } }
-        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-        @keyframes underlineGrow { to { transform: scaleX(1); } }
-
-        /* Marquee */
-        .marquee-section { padding: 3rem 0; overflow: hidden; background: var(--bg-primary); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); position: relative; z-index: 2; }
-        .marquee-track { display: flex; width: max-content; animation: marqueeScroll 35s linear infinite; }
-        .marquee-track:hover { animation-play-state: paused; }
-        .marquee-text { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; color: transparent; -webkit-text-stroke: 1px rgba(253,127,56,0.2); white-space: nowrap; padding: 0 2rem; text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.4s ease; }
-        .marquee-text:hover { color: var(--accent); -webkit-text-stroke: 1px var(--accent); }
-        @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        /* Section utilities */
-        .section { position: relative; z-index: 1; padding: var(--section-padding) var(--container-padding); overflow: hidden; }
-        .section-alt { background: var(--bg-secondary); }
-        .container { max-width: var(--container-max); margin: 0 auto; }
-        .section-header { margin-bottom: 80px; }
-        .section-eyebrow { font-family: var(--font-body); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); margin-bottom: 1.5rem; display: inline-flex; align-items: center; gap: 1rem; }
-        .section-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--accent); }
-        .section-title { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.15; color: var(--text-primary); margin-bottom: 1.5rem; }
-        .section-subtitle { font-family: var(--font-body); font-size: 1.15rem; color: var(--text-secondary); max-width: 600px; line-height: 1.7; font-weight: 400; }
-
-        /* Reveal animations */
-        .reveal { opacity: 0; transform: translateY(50px); transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo); will-change: transform, opacity; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        .reveal-left { opacity: 0; transform: translateX(-60px); transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo); }
-        .reveal-left.active { opacity: 1; transform: translateX(0); }
-        .reveal-right { opacity: 0; transform: translateX(60px); transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo); }
-        .reveal-right.active { opacity: 1; transform: translateX(0); }
-        .reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo); }
-        .reveal-scale.active { opacity: 1; transform: scale(1); }
+        /* Verzögerungen für eleganten "Staggered"-Effekt */
         .delay-1 { transition-delay: 0.15s; }
         .delay-2 { transition-delay: 0.3s; }
-        .delay-3 { transition-delay: 0.45s; }
-        .delay-4 { transition-delay: 0.6s; }
 
-        /* Services */
-        .services-grid { display: flex; flex-direction: column; gap: 100px; }
-        .service-card { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; perspective: 1000px; }
-        .service-card:nth-child(even) { direction: rtl; }
-        .service-card:nth-child(even) > * { direction: ltr; }
-        .service-visual { position: relative; border-radius: 8px; overflow: hidden; transform-style: preserve-3d; transition: transform 0.6s var(--ease-out-expo); background: var(--bg-secondary); }
-        .service-visual::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(253,127,56,0.1), transparent 60%); opacity: 0; transition: opacity 0.5s ease; z-index: 2; pointer-events: none; }
-        .service-card:hover .service-visual::before { opacity: 1; }
-        .service-visual img { width: 100%; height: auto; display: block; filter: grayscale(20%); transition: filter 0.6s ease, transform 0.8s var(--ease-out-expo); border-radius: 8px; }
-        .service-card:hover .service-visual img { filter: grayscale(0%); transform: scale(1.03); }
-        .service-visual-frame { position: absolute; inset: -12px; border: 1px solid rgba(253,127,56,0.15); border-radius: 12px; z-index: 1; opacity: 0; transition: all 0.5s var(--ease-out-expo); pointer-events: none; }
-        .service-card:hover .service-visual-frame { inset: -18px; opacity: 1; }
-        .service-content { padding: 20px 0; }
-        .service-number { font-family: var(--font-display); font-size: 0.8rem; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1rem; display: block; }
-        .service-title { font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 900; color: var(--text-primary); margin-bottom: 1.5rem; line-height: 1.2; }
-        .service-desc { font-family: var(--font-body); font-size: 1.1rem; color: var(--text-secondary); line-height: 1.9; font-weight: 400; }
-        .service-desc br { display: block; content: ""; margin-bottom: 0.3rem; }
+        /* =========================================
+            NAVIGATION (Dynamic State change)
+            ========================================= */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+            transition: padding 0.4s ease, background 0.4s ease, backdrop-filter 0.4s ease;
+        }
 
-        /* Values */
-        .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 60px; }
-        .value-card { background: var(--bg-card); padding: 3.5rem 2.5rem; border: 1px solid var(--border-subtle); border-radius: 4px; position: relative; overflow: hidden; transition: all 0.6s var(--ease-out-expo); opacity: 0; transform: translateY(50px); }
-        .value-card.active { opacity: 1; transform: translateY(0); }
-        .value-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.6s var(--ease-out-expo); }
-        .value-card:hover { border-color: var(--border-hover); transform: translateY(-12px); box-shadow: 0 25px 60px rgba(0,0,0,0.4); }
-        .value-card:hover::before { transform: scaleX(1); }
-        .value-icon { width: 56px; height: 56px; border: 1.5px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.75rem; font-size: 1.4rem; color: var(--accent); transition: all 0.5s var(--ease-elastic); position: relative; z-index: 1; }
-        .value-card:hover .value-icon { background: var(--accent); color: #000; transform: rotate(360deg) scale(1.1); }
-        .value-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; margin-bottom: 1rem; color: var(--text-primary); position: relative; z-index: 1; }
-        .value-text { color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; font-weight: 400; position: relative; z-index: 1; }
-        .value-number { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--font-display); font-size: 4rem; color: rgba(253,127,56,0.06); line-height: 1; transition: color 0.4s ease; font-weight: 900; }
-        .value-card:hover .value-number { color: rgba(253,127,56,0.12); }
+        /* Wird via JS getriggert, wenn der User scrollt */
+        header.scrolled {
+            padding: 18px 5%;
+            background: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-        /* About */
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
-        .about-visuals { position: sticky; top: 120px; display: flex; flex-direction: column; gap: 30px; }
-        .about-visuals img { width: 100%; height: auto; border-radius: 4px; display: block; filter: grayscale(15%); transition: filter 0.6s ease; }
-        .about-visuals:hover img { filter: grayscale(0%); }
-        .founder-card { background: var(--bg-card); padding: 35px; border-left: 3px solid var(--accent); position: relative; overflow: hidden; transition: all 0.5s var(--ease-out-expo); }
-        .founder-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--accent-glow-strong), transparent); opacity: 0; transition: opacity 0.5s ease; }
-        .founder-card:hover::before { opacity: 1; }
-        .founder-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .founder-card h4 { font-family: var(--font-display); font-size: 1.6rem; color: var(--text-primary); margin-bottom: 15px; font-weight: 900; position: relative; z-index: 1; }
-        .founder-card p { font-size: 1rem; color: var(--text-secondary); font-weight: 400; line-height: 1.8; margin-bottom: 15px; position: relative; z-index: 1; }
-        .founder-question { color: var(--accent); font-size: 1.1rem; font-weight: 900; margin-top: 20px; position: relative; z-index: 1; }
-        .about-biography { display: flex; flex-direction: column; }
-        .about-biography .section-title { margin-bottom: 40px; }
-        .about-biography p { font-size: 1.1rem; color: var(--text-secondary); font-weight: 400; margin-bottom: 25px; line-height: 1.8; }
-        .about-biography p.lead-text { font-size: 1.25rem; color: var(--text-primary); margin-bottom: 35px; font-weight: 400; }
-        .about-highlight { font-family: var(--font-display); font-size: 1.3rem; margin-top: 40px; color: var(--accent); display: inline-block; font-weight: 900; border-bottom: 1px solid rgba(253,127,56,0.3); padding-bottom: 10px; transition: all 0.4s ease; }
-        .about-highlight:hover { border-color: var(--accent); padding-bottom: 14px; }
+        .logo img {
+            height: 45px;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        
+        header.scrolled .logo img {
+            transform: scale(0.95);
+        }
 
-        /* Testimonial */
-        .testimonial-section { text-align: center; position: relative; }
-        .testimonial-section::before, .testimonial-section::after { content: '"'; font-family: var(--font-display); font-size: 18rem; color: rgba(253,127,56,0.04); position: absolute; line-height: 1; pointer-events: none; font-weight: 900; }
-        .testimonial-section::before { top: -3rem; left: 5%; }
-        .testimonial-section::after { bottom: -10rem; right: 5%; }
-        .testimonial-quote { font-family: var(--font-display); font-size: clamp(1.4rem, 3.5vw, 2.2rem); font-style: italic; color: var(--text-primary); line-height: 1.5; max-width: 850px; margin: 0 auto 2rem; opacity: 0; transform: translateY(30px); transition: all 0.8s var(--ease-out-expo); }
-        .testimonial-quote.active { opacity: 1; transform: translateY(0); }
-        .testimonial-author { color: var(--accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; opacity: 0; transition: opacity 0.8s ease 0.3s; }
-        .testimonial-author.active { opacity: 1; }
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
 
-        /* Contact */
-        .contact-section-inner { max-width: 700px; margin: 60px auto 0; text-align: center; }
-        .contact-info-center h3 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 900; }
-        .contact-info-center p { color: var(--text-secondary); margin-bottom: 2.5rem; line-height: 1.8; font-weight: 400; font-size: 1.05rem; }
-        .contact-links-center { display: flex; flex-direction: column; gap: 1rem; align-items: center; }
-        .contact-link-item { display: flex; align-items: center; gap: 1rem; color: var(--text-secondary); text-decoration: none; font-size: 1rem; padding: 1.1rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 4px; transition: all 0.4s var(--ease-out-expo); font-weight: 400; max-width: 450px; width: 100%; justify-content: center; }
-        .contact-link-item:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); background: var(--bg-card); box-shadow: 0 5px 30px rgba(253,127,56,0.08); }
-        .contact-link-item svg { width: 20px; height: 20px; flex-shrink: 0; fill: currentColor; transition: transform 0.3s var(--ease-out-expo); }
-        .contact-link-item:hover svg { transform: scale(1.15); }
+        .nav-links a {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900; /* Black */
+            position: relative;
+        }
 
-        /* Footer */
-        .footer { background: var(--bg-secondary); padding: 4rem var(--container-padding) 2rem; border-top: 1px solid var(--border-subtle); position: relative; }
-        .footer-content { max-width: var(--container-max); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; }
-        .footer-brand { font-family: var(--font-display); font-size: 1.4rem; color: var(--accent); font-weight: 900; }
-        .footer-copy { color: var(--text-muted); font-size: 0.85rem; font-weight: 400; }
-        .footer-social { display: flex; gap: 2rem; }
-        .footer-social a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; transition: color 0.3s ease; position: relative; }
-        .footer-social a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s var(--ease-out-expo); }
-        .footer-social a:hover { color: var(--accent); }
-        .footer-social a:hover::after { width: 100%; }
+        /* Edler Underline-Effekt bei Hover */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--accent);
+            transition: width 0.4s ease;
+        }
 
-        /* Mobile menu */
-        .mobile-menu { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; opacity: 0; visibility: hidden; transition: all 0.5s var(--ease-out-expo); }
-        .mobile-menu.active { opacity: 1; visibility: visible; }
-        .mobile-menu a { font-family: var(--font-display); font-size: 2rem; font-weight: 900; color: var(--text-primary); text-transform: uppercase; letter-spacing: 3px; transition: color 0.3s ease; }
-        .mobile-menu a:hover { color: var(--accent); }
-        .mobile-lang { display: flex; gap: 1rem; margin-top: 2rem; }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
 
-        /* Magnetic */
-        .magnetic { display: inline-block; transition: transform 0.3s var(--ease-out-expo); }
+        /* =========================================
+            HERO SECTION (HOME)
+            ========================================= */
+        #home {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
 
-        /* Responsive */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 1100px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 5vw, 5.5rem);
+            line-height: 1.2;
+            margin-bottom: 35px;
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .hero-content p {
+            font-size: clamp(1.2rem, 2vw, 1.7rem);
+            font-weight: 400;
+            color: #e5e5e5;
+            max-width: 900px;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+            SERVICES SECTION
+            ========================================= */
+        #services {
+            background-color: var(--bg-color);
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 120px;
+            font-weight: 900;
+        }
+
+        .services-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 140px; 
+        }
+
+        .service-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 80px;
+            width: 100%;
+        }
+
+        .service-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .service-image {
+            flex: 1 1 50%;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: cover;
+            filter: grayscale(15%);
+            transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            display: block;
+        }
+
+        .wise-leaders-img {
+            object-position: top center !important;
+        }
+
+        .service-row:hover .service-image img {
+            filter: grayscale(0%);
+            transform: scale(1.04); /* Subtiler Zoom-Effekt bei Hover */
+        }
+
+        .service-text {
+            flex: 1 1 50%;
+        }
+
+        .service-text h3 {
+            font-size: 2.8rem;
+            color: var(--accent);
+            margin-bottom: 25px;
+            font-weight: 900;
+        }
+
+        .service-text p {
+            font-size: 1.3rem;
+            color: #cccccc;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* =========================================
+            ABOUT US SECTION
+            ========================================= */
+        #about {
+            background-color: var(--bg-color);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: start;
+        }
+
+        .about-visuals {
+            position: sticky;
+            top: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .about-visuals img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .founder-philosophy {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .founder-philosophy h4 {
+            color: var(--text-main);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .founder-philosophy p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .philosophy-question {
+            color: var(--accent);
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-top: 20px;
+        }
+
+        .about-biography {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .about-biography h2 {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 40px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .about-biography p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            font-weight: 400;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .about-biography p.lead-text {
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin-bottom: 35px;
+        }
+
+        .about-biography .highlight {
+            font-size: 1.5rem;
+            margin-top: 40px;
+            color: var(--accent);
+            display: inline-block;
+            font-weight: 900;
+            border-bottom: 1px solid rgba(253, 127, 56, 0.3);
+            padding-bottom: 10px;
+        }
+
+        /* =========================================
+            CONTACT SECTION & LINKEDIN
+            ========================================= */
+        #contact {
+            background-color: #000000;
+            text-align: center;
+        }
+
+        .contact-content h2 {
+            font-size: clamp(3rem, 5vw, 5rem);
+            color: var(--text-main);
+            margin-bottom: 50px;
+            font-weight: 900;
+        }
+
+        .contact-details {
+            font-size: 1.4rem;
+            font-weight: 400;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-details a.contact-link {
+            display: block;
+            font-size: 2.5rem;
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        /* LinkedIn Button Wrapper */
+        .linkedin-wrapper {
+            margin-top: 15px;
+        }
+
+        .linkedin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 12px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            transition: all 0.4s ease;
+        }
+
+        .linkedin-link svg {
+            fill: #ffffff;
+            transition: fill 0.4s ease, transform 0.4s ease;
+        }
+
+        /* LinkedIn Hover-State */
+        .linkedin-link:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: rgba(253, 127, 56, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .linkedin-link:hover svg {
+            fill: var(--accent);
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        .contact-details p {
+            margin-top: 40px;
+            color: #999999;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+            RESPONSIVE DESIGN
+            ========================================= */
         @media (max-width: 1024px) {
-            :root { --section-padding: 100px; }
-            .nav-links { display: none; }
-            .mobile-menu-btn { display: flex; }
-            .service-card, .service-card:nth-child(even) { grid-template-columns: 1fr; gap: 40px; direction: ltr !important; }
-            .service-card:nth-child(even) > * { direction: ltr !important; }
-            .about-grid { grid-template-columns: 1fr; gap: 60px; }
-            .about-visuals { position: relative; top: 0; }
-            .values-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 768px) {
-            :root { --section-padding: 80px; --container-padding: 5%; }
-            .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
-            .service-visual-frame { display: none; }
-            .footer-content { flex-direction: column; text-align: center; gap: 1.5rem; }
-            .testimonial-section::before, .testimonial-section::after { font-size: 10rem; }
-        }
-        @media (max-width: 480px) {
-            .value-card { padding: 2.5rem 1.5rem; }
-            .founder-card { padding: 25px; }
+            .nav-links {
+                display: none; 
+            }
+            .service-row, .service-row:nth-child(even) {
+                flex-direction: column;
+                gap: 40px;
+            }
+            .service-image, .service-text {
+                flex: 1 1 100%;
+                width: 100%;
+                text-align: center;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+            .about-visuals {
+                position: relative;
+                top: 0;
+            }
+            .contact-details a.contact-link {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Loader -->
-    <div class="loader" id="loader">
-        <div class="loader-logo">
-            <span class="brand-i" style="animation-delay:0s">I</span><span style="animation-delay:0.05s">N</span><span style="animation-delay:0.1s">S</span><span style="animation-delay:0.15s">P</span><span style="animation-delay:0.2s">I</span><span style="animation-delay:0.25s">R</span><span style="animation-delay:0.3s">E</span><span class="brand-i" style="animation-delay:0.35s">I</span><span style="animation-delay:0.4s">M</span><span style="animation-delay:0.45s">P</span><span style="animation-delay:0.5s">A</span><span style="animation-delay:0.55s">C</span><span style="animation-delay:0.6s">T</span>
-        </div>
-        <div class="loader-track">
-            <div class="loader-fill"></div>
-        </div>
-    </div>
-
-    <div class="scroll-progress" id="scroll-progress"></div>
-
-    <!-- Nav -->
-    <nav class="nav" id="nav">
-        <a href="#home" class="nav-logo magnetic">
+    <header id="main-header">
+        <a href="#home" class="logo">
             <img src="https://www.image2url.com/r2/default/images/1782286501821-16adcfb9-959f-4cb0-a49c-18bb3f939adc.png" alt="InspireImpact Logo">
         </a>
-        <div class="nav-links">
-            <a href="#home" class="magnetic" data-i18n="nav.home">Home</a>
-            <a href="#services" class="magnetic" data-i18n="nav.services">Services</a>
-            <a href="#about" class="magnetic" data-i18n="nav.about">About Us</a>
-            <a href="#contact" class="magnetic" data-i18n="nav.contact">Contact</a>
-            <div class="lang-switcher">
-                <button class="lang-btn active" data-lang="en" aria-label="English">EN</button>
-                <button class="lang-btn" data-lang="de" aria-label="Deutsch">DE</button>
-            </div>
-        </div>
-        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-    </nav>
+        <nav class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#about">About Us</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
 
-    <div class="mobile-menu" id="mobile-menu">
-        <a href="#home" data-i18n="nav.home">Home</a>
-        <a href="#services" data-i18n="nav.services">Services</a>
-        <a href="#about" data-i18n="nav.about">About Us</a>
-        <a href="#contact" data-i18n="nav.contact">Contact</a>
-        <div class="mobile-lang">
-            <button class="lang-btn active" data-lang="en" aria-label="English">EN</button>
-            <button class="lang-btn" data-lang="de" aria-label="Deutsch">DE</button>
-        </div>
-    </div>
-
-    <!-- Hero -->
-    <section class="hero" id="home">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <video class="hero-video" autoplay loop muted playsinline>
+    <section id="home">
+        <video class="video-bg" autoplay loop muted playsinline>
             <source src="https://www.image2url.com/r2/default/videos/1781854550253-e0a25ec0-db1d-489e-b119-57b7f0cc80d0.mp4" type="video/mp4">
         </video>
-        <div class="hero-overlay"></div>
+        <div class="overlay"></div>
         <div class="hero-content">
-            <p class="hero-eyebrow" data-i18n="hero.eyebrow">Strategy &middot; Innovation &middot; Leadership</p>
-            <h1 class="hero-title">
-                <span class="line"><span data-i18n="hero.title1">We shake your</span></span>
-                <span class="line"><span><span class="highlight" data-i18n="hero.titleHighlight">present</span> <span data-i18n="hero.title2">for a flourishing future!</span></span></span>
-            </h1>
-            <p class="hero-subtitle" data-i18n="hero.subtitle">We create lasting impacts for our clients through customized consulting services, distinguishing ourselves with an innovative, responsible and sustainable focus.</p>
-            <a href="#services" class="hero-cta magnetic">
-                <span data-i18n="hero.cta">Discover Our Services</span>
-                <span class="arrow">&rarr;</span>
-            </a>
-        </div>
-        <div class="scroll-hint">
-            <span data-i18n="hero.scroll">Scroll</span>
-            <div class="scroll-line"></div>
+            <h1>We shake your present for a flourishing future!</h1>
+            <p>We create lasting impacts for our clients through customized consulting services, distinguishing ourselves with an innovative, responsible and sustainable focus.</p>
         </div>
     </section>
 
-    <!-- Marquee -->
-    <section class="marquee-section">
-        <div class="marquee-track">
-            <span class="marquee-text">Empowering Culture</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Innovative Businesses</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Sustainable Impact</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Actionable Strategy</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Wise Leaders</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Empowering Culture</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Innovative Businesses</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Sustainable Impact</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Actionable Strategy</span>
-            <span class="marquee-text">&middot;</span>
-            <span class="marquee-text">Wise Leaders</span>
-            <span class="marquee-text">&middot;</span>
-        </div>
-    </section>
-
-    <!-- Services -->
-    <section class="section" id="services">
+    <section id="services">
         <div class="container">
-            <div class="section-header" style="text-align:center;">
-                <span class="section-eyebrow" style="justify-content:center;" data-i18n="services.eyebrow">What We Do</span>
-                <h2 class="section-title" data-i18n="services.title">Our Services</h2>
-            </div>
-
-            <div class="services-grid">
-
-                <article class="service-card reveal">
-                    <div class="service-visual">
-                        <div class="service-visual-frame"></div>
+            <h2 class="section-title reveal">Our Services</h2>
+            
+            <div class="services-layout">
+                
+                <div class="service-row reveal">
+                    <div class="service-image">
                         <img src="https://www.image2url.com/r2/default/images/1781855537346-aad1f3b4-bdd9-4ff4-a49a-a41c6bb8c4a3.png" alt="Empowering Culture">
                     </div>
-                    <div class="service-content">
-                        <span class="service-number">01</span>
-                        <h3 class="service-title" data-i18n="services.s1.title">Empowering Culture</h3>
-                        <p class="service-desc" data-i18n="services.s1.desc">Cultural Evolution<br>Change Management<br>Employee Experience Design</p>
+                    <div class="service-text">
+                        <h3>Empowering Culture</h3>
+                        <p>
+                            Cultural Evolution<br>
+                            Change Management<br>
+                            Employee Experience Design
+                        </p>
                     </div>
-                </article>
+                </div>
 
-                <article class="service-card reveal">
-                    <div class="service-visual">
-                        <div class="service-visual-frame"></div>
+                <div class="service-row reveal">
+                    <div class="service-image">
                         <img src="https://www.image2url.com/r2/default/images/1781855626523-44236fcc-7f06-48bf-b2c8-bfab4fbc051b.png" alt="Innovative Businesses">
                     </div>
-                    <div class="service-content">
-                        <span class="service-number">02</span>
-                        <h3 class="service-title" data-i18n="services.s2.title">Innovative Businesses</h3>
-                        <p class="service-desc" data-i18n="services.s2.desc">Ideation &amp; Opportunity Identification<br>Growth &amp; Innovation Strategy<br>Customer Experience Design</p>
+                    <div class="service-text">
+                        <h3>Innovative Businesses</h3>
+                        <p>
+                            Ideation & Opportunity Identification<br>
+                            Growth & Innovation Strategy<br>
+                            Customer Experience Design
+                        </p>
                     </div>
-                </article>
+                </div>
 
-                <article class="service-card reveal">
-                    <div class="service-visual">
-                        <div class="service-visual-frame"></div>
+                <div class="service-row reveal">
+                    <div class="service-image">
                         <img src="https://www.image2url.com/r2/default/images/1781856126472-354cc01c-9014-49bd-b119-c001a1892385.png" alt="Sustainable Impact">
                     </div>
-                    <div class="service-content">
-                        <span class="service-number">03</span>
-                        <h3 class="service-title" data-i18n="services.s3.title">Sustainable Impact</h3>
-                        <p class="service-desc" data-i18n="services.s3.desc">Sustainable Strategy<br>Sustainable Implementation<br>Social Entrepreneurship</p>
+                    <div class="service-text">
+                        <h3>Sustainable Impact</h3>
+                        <p>
+                            Sustainable Strategy<br>
+                            Sustainable Implementation<br>
+                            Social Entrepreneurship
+                        </p>
                     </div>
-                </article>
+                </div>
 
-                <article class="service-card reveal">
-                    <div class="service-visual">
-                        <div class="service-visual-frame"></div>
+                <div class="service-row reveal">
+                    <div class="service-image">
                         <img src="https://www.image2url.com/r2/default/images/1781856183708-211e099b-4678-4ef4-a407-7924b65b7678.png" alt="Actionable Strategy">
                     </div>
-                    <div class="service-content">
-                        <span class="service-number">04</span>
-                        <h3 class="service-title" data-i18n="services.s4.title">Actionable Strategy</h3>
-                        <p class="service-desc" data-i18n="services.s4.desc">Vision &amp; Strategy Development<br>Strategy Implementation<br>Strategy Progress Implementation</p>
+                    <div class="service-text">
+                        <h3>Actionable Strategy</h3>
+                        <p>
+                            Vision & Strategy Development<br>
+                            Strategy Implementation<br>
+                            Strategy Progress Implementation
+                        </p>
                     </div>
-                </article>
+                </div>
 
-                <article class="service-card reveal">
-                    <div class="service-visual">
-                        <div class="service-visual-frame"></div>
-                        <img src="https://www.image2url.com/r2/default/images/1781856221521-60e17f17-80a0-41bb-b70c-78e9e5cebe4b.png" alt="Wise Leaders">
+                <div class="service-row reveal">
+                    <div class="service-image">
+                        <img class="wise-leaders-img" src="https://www.image2url.com/r2/default/images/1781856221521-60e17f17-80a0-41bb-b70c-78e9e5cebe4b.png" alt="Wise Leaders">
                     </div>
-                    <div class="service-content">
-                        <span class="service-number">05</span>
-                        <h3 class="service-title" data-i18n="services.s5.title">Wise Leaders</h3>
-                        <p class="service-desc" data-i18n="services.s5.desc">Leadership Coaching<br>Leadership Companionship<br>Leadership Interim</p>
+                    <div class="service-text">
+                        <h3>Wise Leaders</h3>
+                        <p>
+                            Leadership Coaching<br>
+                            Leadership Companionship<br>
+                            Leadership Interim
+                        </p>
                     </div>
-                </article>
+                </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Values -->
-    <section class="section section-alt" id="values">
-        <div class="container">
-            <div class="section-header" style="text-align:center;">
-                <span class="section-eyebrow" style="justify-content:center;" data-i18n="values.eyebrow">Core Principles</span>
-                <h2 class="section-title" data-i18n="values.title">What Drives Us</h2>
-                <p class="section-subtitle" style="margin:0 auto;" data-i18n="values.subtitle">Three pillars that shape every decision, every strategy, and every interaction. These are not just words &mdash; they are the foundation of lasting impact.</p>
-            </div>
-            <div class="values-grid">
-                <article class="value-card">
-                    <span class="value-number">01</span>
-                    <div class="value-icon">&#9829;</div>
-                    <h3 class="value-title" data-i18n="values.v1.title">Loving Kindness</h3>
-                    <p class="value-text" data-i18n="values.v1.text">Respect and humility in every achievement. Loving kindness allows us to see beyond ourselves, fostering genuine connections and creating environments where everyone can thrive. It is the quiet strength that transforms teams and builds communities.</p>
-                </article>
-                <article class="value-card">
-                    <span class="value-number">02</span>
-                    <div class="value-icon">&#9889;</div>
-                    <h3 class="value-title" data-i18n="values.v2.title">Courage</h3>
-                    <p class="value-text" data-i18n="values.v2.text">The core driver to pursue what the heart seeks. Courage is not the absence of fear, but the determination to act despite it. It pushes boundaries, challenges the status quo, and turns ambitious visions into reality.</p>
-                </article>
-                <article class="value-card">
-                    <span class="value-number">03</span>
-                    <div class="value-icon">&#9670;</div>
-                    <h3 class="value-title" data-i18n="values.v3.title">Resilience</h3>
-                    <p class="value-text" data-i18n="values.v3.text">The ability to overcome difficult situations in life and business. Resilience is the art of bending without breaking, of learning from setbacks and emerging stronger. It turns obstacles into stepping stones and failures into wisdom.</p>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- About -->
-    <section class="section" id="about">
-        <div class="orb orb-3"></div>
+    <section id="about">
         <div class="container">
             <div class="about-grid">
-
-                <div class="about-visuals reveal-left">
+                
+                <div class="about-visuals reveal">
                     <img src="https://www.image2url.com/r2/default/images/1782289961495-916dfc6e-87bb-4dc2-a856-d763916096a3.jpg" alt="Kiflay Mengestabe">
-                    <div class="founder-card reveal delay-1">
+                    
+                    <div class="founder-philosophy reveal delay-1">
                         <h4>Kiflay Mengestabe</h4>
-                        <p data-i18n="about.philosophy1">Loving kindness, courage and resilience are some of my favourite words. These words have such a deep meaning in my life that they help me to become a better person and a better inhabitant of this planet.</p>
-                        <p data-i18n="about.philosophy2">I believe that loving kindness allows us to respect each other and to be humble in our achievements. Courage is the core to pursue what our heart seeks. Resilience allows us to overcome the difficult situations in our lives and businesses.</p>
-                        <div class="founder-question" data-i18n="about.question">What is your inspiration for life?</div>
+                        <p>Loving kindness, courage and resilience are some of my favourite words. These words have such a deep meaning in my life that they help me to become a better person and a better inhabitant of this planet.</p>
+                        <p>I believe that loving kindness allows us to respect each other and to be humble in our achievements. Courage is the core to pursue what our heart seeks. Resilience allows us to overcome the difficult situations in our lives and businesses.</p>
+                        <div class="philosophy-question">What is your inspiration for life?</div>
                     </div>
                 </div>
 
-                <div class="about-biography reveal-right delay-1">
-                    <span class="section-eyebrow" data-i18n="about.eyebrow">Meet the Founder</span>
-                    <h2 class="section-title" data-i18n="about.title">Meet the Founder</h2>
-
-                    <p class="lead-text" data-i18n="about.lead">In a nutshell, Kiflay spent his childhood in different countries, cultures and continents. This shaped his future to become an engineer, strategist, explorer and innovator.</p>
-
-                    <p data-i18n="about.p1">As a young child, Kiflay grew up in a small highlands town on the African continent. Later on, he experienced what it meant to be a refugee and adapt to a new culture, in Switzerland.</p>
-
-                    <p data-i18n="about.p2">During this time, Kiflay never let go of his childhood dreams and graduated as an engineer in 2018 in Switzerland. He then decided to expand his knowledge and oriented himself towards innovation, strategy, business and leadership as a consultant for prestigious Swiss-based consultancy companies.</p>
-
-                    <p data-i18n="about.p3">During his career as a consultant, Kiflay worked for Start-ups, small and medium-size enterprises as well as international corporations as well as the Swiss government in various fields.</p>
-
-                    <p data-i18n="about.p4">Kiflay's life and career have provided the perfect experimental playground to develop his entrepreneurial and leadership skills. Kiflay thrives on working with people and allowing them to meet any challenge.</p>
-
-                    <p data-i18n="about.p5">Kiflay believes that reality is more fascinating than one&rsquo;s dream, as long as we work courageously toward our dreams. To him, being a pioneer means reinventing yourself and the world for the better through relentless determination.</p>
-
-                    <p data-i18n="about.p6">Realising that personal wisdom and professional maturity are endless, he spent almost a year backpacking through different cultures and continents and is currently pursuing his EMBA in &ldquo;Harnessing Innovation&rdquo; at EPFL.</p>
-
-                    <div class="about-highlight reveal delay-2" data-i18n="about.highlight">He would be honored to meet you, don&rsquo;t hesitate to contact us.</div>
+                <div class="about-biography reveal delay-1">
+                    <h2>Meet the Founder</h2>
+                    
+                    <p class="lead-text">In a nutshell, Kiflay spent his childhood in different countries, cultures and continents. This shaped his future to become an engineer, strategist, explorer and innovator.</p>
+                    
+                    <p>As a young child, Kiflay grew up in a small highlands town on the African continent. Later on, he experienced what it meant to be a refugee and adapt to a new culture, in Switzerland.</p>
+                    
+                    <p>During this time, Kiflay never let go of his childhood dreams and graduated as an engineer in 2018 in Switzerland. He then decided to expand his knowledge and oriented himself towards innovation, strategy, business and leadership as a consultant for prestigious Swiss-based consultancy companies.</p>
+                    
+                    <p>During his career as a consultant, Kiflay worked for Start-ups, small and medium-size enterprises as well as international corporations as well as the Swiss government in various fields.</p>
+                    
+                    <p>Kiflay's life and career have provided the perfect experimental playground to develop his entrepreneurial and leadership skills. Kiflay thrives on working with people and allowing them to meet any challenge.</p>
+                    
+                    <p>Kiflay believes that reality is more fascinating than one’s dream, as long as we work courageously toward our dreams. To him, being a pioneer means reinventing yourself and the world for the better through relentless determination.</p>
+                    
+                    <p>Realising that personal wisdom and professional maturity are endless, he spent almost a year backpacking through different cultures and continents and is currently pursuing his EMBA in "Harnessing Innovation" at EPFL.</p>
+                    
+                    <div class="highlight reveal delay-2">He would be honored to meet you, don’t hesitate to contact us.</div>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Testimonial -->
-    <section class="section testimonial-section section-alt" id="testimonial">
-        <div class="container">
-            <blockquote class="testimonial-quote" data-i18n="testimonial.quote">
-                &ldquo;What is your inspiration for life? Loving kindness, courage and resilience are some of my favourite words. These words have such a deep meaning in my life that they help me to become a better person and a better inhabitant of this planet.&rdquo;
-            </blockquote>
-            <p class="testimonial-author">&mdash; Kiflay Mengestabe</p>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="section" id="contact">
-        <div class="container">
-            <div class="section-header" style="text-align:center;">
-                <span class="section-eyebrow" style="justify-content:center;" data-i18n="contact.eyebrow">Get in Touch</span>
-                <h2 class="section-title" data-i18n="contact.title">Let&rsquo;s work together</h2>
-                <p class="section-subtitle" style="margin:0 auto;" data-i18n="contact.subtitle">Ready to shake your present for a flourishing future? Reach out and let&rsquo;s start a conversation.</p>
-            </div>
-
-            <div class="contact-section-inner reveal">
-                <div class="contact-info-center">
-                    <h3 data-i18n="contact.infoTitle">Start a Conversation</h3>
-                    <p data-i18n="contact.infoText">Whether you&rsquo;re looking for strategic guidance, innovation consulting, or leadership coaching &mdash; I&rsquo;d be honored to meet you and explore how we can work together.</p>
-                    <div class="contact-links-center">
-                        <a href="mailto:hello@inspireimpact.ch" class="contact-link-item magnetic">
-                            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                            <span>hello@inspireimpact.ch</span>
+    <section id="contact">
+        <div class="container reveal">
+            <div class="contact-content">
+                <h2>Let’s work together</h2>
+                <div class="contact-details">
+                    <a href="mailto:hello@inspireimpact.ch" class="contact-link">hello@inspireimpact.ch</a>
+                    <a href="tel:+41798721062" class="contact-link">(+41) 79 872 10 62</a>
+                    
+                    <div class="linkedin-wrapper">
+                        <a href="https://www.linkedin.com/in/kiflay-mengestabe-12849922a/" target="_blank" rel="noopener noreferrer" class="linkedin-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                            LinkedIn
                         </a>
-                        <a href="tel:+41798721062" class="contact-link-item magnetic">
-                            <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                            <span>(+41) 79 872 10 62</span>
-                        </a>
-                        <a href="https://www.linkedin.com/in/kiflay-mengestabe-12849922a/" target="_blank" rel="noopener noreferrer" class="contact-link-item magnetic">
-                            <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                            <span>LinkedIn</span>
-                        </a>
-                        <div class="contact-link-item" style="cursor:default;">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                            <span>Engestrasse 3, 3012 Bern, Switzerland</span>
-                        </div>
                     </div>
+
+                    <p>Engestrasse 3<br>3012 Bern<br>Switzerland</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <span class="brand-text"><span class="brand-i">I</span>NSPIRE<span class="brand-i">I</span>MPACT</span>
-            </div>
-            <p class="footer-copy">&copy; 2024 InspireImpact. All rights reserved.</p>
-            <div class="footer-social">
-                <a href="https://www.linkedin.com/in/kiflay-mengestabe-12849922a/" target="_blank" rel="noopener noreferrer" class="magnetic">LinkedIn</a>
-            </div>
-        </div>
-    </footer>
 
     <script>
-        // ================================================================
-        // INTERNATIONALIZATION (i18n)
-        // ================================================================
-        const i18n = {
-            en: {
-                nav: { home: 'Home', services: 'Services', about: 'About Us', contact: 'Contact' },
-                hero: {
-                    eyebrow: 'Strategy · Innovation · Leadership',
-                    title1: 'We shake your',
-                    titleHighlight: 'present',
-                    title2: 'for a flourishing future!',
-                    subtitle: 'We create lasting impacts for our clients through customized consulting services, distinguishing ourselves with an innovative, responsible and sustainable focus.',
-                    cta: 'Discover Our Services',
-                    scroll: 'Scroll'
-                },
-                services: {
-                    eyebrow: 'What We Do',
-                    title: 'Our Services',
-                    s1: { title: 'Empowering Culture', desc: 'Cultural Evolution<br>Change Management<br>Employee Experience Design' },
-                    s2: { title: 'Innovative Businesses', desc: 'Ideation & Opportunity Identification<br>Growth & Innovation Strategy<br>Customer Experience Design' },
-                    s3: { title: 'Sustainable Impact', desc: 'Sustainable Strategy<br>Sustainable Implementation<br>Social Entrepreneurship' },
-                    s4: { title: 'Actionable Strategy', desc: 'Vision & Strategy Development<br>Strategy Implementation<br>Strategy Progress Implementation' },
-                    s5: { title: 'Wise Leaders', desc: 'Leadership Coaching<br>Leadership Companionship<br>Leadership Interim' }
-                },
-                values: {
-                    eyebrow: 'Core Principles',
-                    title: 'What Drives Us',
-                    subtitle: 'Three pillars that shape every decision, every strategy, and every interaction. These are not just words — they are the foundation of lasting impact.',
-                    v1: { title: 'Loving Kindness', text: 'Respect and humility in every achievement. Loving kindness allows us to see beyond ourselves, fostering genuine connections and creating environments where everyone can thrive. It is the quiet strength that transforms teams and builds communities.' },
-                    v2: { title: 'Courage', text: 'The core driver to pursue what the heart seeks. Courage is not the absence of fear, but the determination to act despite it. It pushes boundaries, challenges the status quo, and turns ambitious visions into reality.' },
-                    v3: { title: 'Resilience', text: 'The ability to overcome difficult situations in life and business. Resilience is the art of bending without breaking, of learning from setbacks and emerging stronger. It turns obstacles into stepping stones and failures into wisdom.' }
-                },
-                about: {
-                    eyebrow: 'Meet the Founder',
-                    title: 'Meet the Founder',
-                    lead: 'In a nutshell, Kiflay spent his childhood in different countries, cultures and continents. This shaped his future to become an engineer, strategist, explorer and innovator.',
-                    p1: 'As a young child, Kiflay grew up in a small highlands town on the African continent. Later on, he experienced what it meant to be a refugee and adapt to a new culture, in Switzerland.',
-                    p2: 'During this time, Kiflay never let go of his childhood dreams and graduated as an engineer in 2018 in Switzerland. He then decided to expand his knowledge and oriented himself towards innovation, strategy, business and leadership as a consultant for prestigious Swiss-based consultancy companies.',
-                    p3: 'During his career as a consultant, Kiflay worked for Start-ups, small and medium-size enterprises as well as international corporations as well as the Swiss government in various fields.',
-                    p4: "Kiflay's life and career have provided the perfect experimental playground to develop his entrepreneurial and leadership skills. Kiflay thrives on working with people and allowing them to meet any challenge.",
-                    p5: 'Kiflay believes that reality is more fascinating than one’s dream, as long as we work courageously toward our dreams. To him, being a pioneer means reinventing yourself and the world for the better through relentless determination.',
-                    p6: 'Realising that personal wisdom and professional maturity are endless, he spent almost a year backpacking through different cultures and continents and is currently pursuing his EMBA in “Harnessing Innovation” at EPFL.',
-                    highlight: 'He would be honored to meet you, don’t hesitate to contact us.',
-                    philosophy1: 'Loving kindness, courage and resilience are some of my favourite words. These words have such a deep meaning in my life that they help me to become a better person and a better inhabitant of this planet.',
-                    philosophy2: 'I believe that loving kindness allows us to respect each other and to be humble in our achievements. Courage is the core to pursue what our heart seeks. Resilience allows us to overcome the difficult situations in our lives and businesses.',
-                    question: 'What is your inspiration for life?'
-                },
-                testimonial: {
-                    quote: '“What is your inspiration for life? Loving kindness, courage and resilience are some of my favourite words. These words have such a deep meaning in my life that they help me to become a better person and a better inhabitant of this planet.”'
-                },
-                contact: {
-                    eyebrow: 'Get in Touch',
-                    title: 'Let’s work together',
-                    subtitle: 'Ready to shake your present for a flourishing future? Reach out and let’s start a conversation.',
-                    infoTitle: 'Start a Conversation',
-                    infoText: 'Whether you’re looking for strategic guidance, innovation consulting, or leadership coaching — I’d be honored to meet you and explore how we can work together.'
-                }
-            },
-            de: {
-                nav: { home: 'Home', services: 'Services', about: 'Über Uns', contact: 'Kontakt' },
-                hero: {
-                    eyebrow: 'Strategie · Innovation · Führung',
-                    title1: 'Wir erschüttern deine',
-                    titleHighlight: 'Gegenwart',
-                    title2: 'für eine blühende Zukunft!',
-                    subtitle: 'Wir schaffen nachhaltige Wirkung für unsere Kunden durch massgeschneiderte Beratungsleistungen und zeichnen uns durch einen innovativen, verantwortungsvollen und nachhaltigen Fokus aus.',
-                    cta: 'Entdecke unsere Services',
-                    scroll: 'Scrollen'
-                },
-                services: {
-                    eyebrow: 'Unsere Expertise',
-                    title: 'Unsere Services',
-                    s1: { title: 'Empowering Culture', desc: 'Cultural Evolution<br>Change Management<br>Employee Experience Design' },
-                    s2: { title: 'Innovative Businesses', desc: 'Ideation & Opportunity Identification<br>Growth & Innovation Strategy<br>Customer Experience Design' },
-                    s3: { title: 'Sustainable Impact', desc: 'Sustainable Strategy<br>Sustainable Implementation<br>Social Entrepreneurship' },
-                    s4: { title: 'Actionable Strategy', desc: 'Vision & Strategy Development<br>Strategy Implementation<br>Strategy Progress Implementation' },
-                    s5: { title: 'Wise Leaders', desc: 'Leadership Coaching<br>Leadership Companionship<br>Leadership Interim' }
-                },
-                values: {
-                    eyebrow: 'Kernwerte',
-                    title: 'Was uns antreibt',
-                    subtitle: 'Drei Säulen, die jede Entscheidung, jede Strategie und jede Interaktion prägen. Das sind nicht nur Worte — sie sind das Fundament nachhaltiger Wirkung.',
-                    v1: { title: 'Loving Kindness', text: 'Respekt und Demut bei jedem Erfolg. Loving Kindness erlaubt es uns, über uns selbst hinauszuwachsen, echte Verbindungen zu knüpfen und Umgebungen zu schaffen, in denen jeder gedeihen kann. Sie ist die stille Kraft, die Teams transformiert und Gemeinschaften aufbaut.' },
-                    v2: { title: 'Courage', text: 'Der Kernantrieb, dem zu folgen, was das Herz sucht. Courage ist nicht die Abwesenheit von Angst, sondern die Entschlossenheit, trotzdem zu handeln. Er verschiebt Grenzen, fordert den Status quo heraus und verwandelt ehrgeizige Visionen in Realität.' },
-                    v3: { title: 'Resilience', text: 'Die Fähigkeit, schwierige Situationen im Leben und im Geschäft zu überwinden. Resilience ist die Kunst, sich zu biegen, ohne zu brechen, aus Rückschlägen zu lernen und stärker hervorzugehen. Sie verwandelt Hindernisse in Sprungbretter und Fehler in Weisheit.' }
-                },
-                about: {
-                    eyebrow: 'Lerne den Gründer kennen',
-                    title: 'Lerne den Gründer kennen',
-                    lead: 'Kurz gesagt verbrachte Kiflay seine Kindheit in verschiedenen Ländern, Kulturen und Kontinenten. Das prägte seine Zukunft als Ingenieur, Stratege, Entdecker und Innovator.',
-                    p1: 'Als kleines Kind wuchs Kiflay in einer kleinen Hochlandstadt auf dem afrikanischen Kontinent auf. Später erlebte er, was es bedeutete, Flüchtling zu sein und sich an eine neue Kultur in der Schweiz anzupassen.',
-                    p2: 'In dieser Zeit gab Kiflay seine Kindheitsträume nie auf und schloss 2018 in der Schweiz sein Ingenieurstudium ab. Anschliessend erweiterte er sein Wissen in den Bereichen Innovation, Strategie, Business und Leadership als Berater für renommierte Schweizer Beratungsunternehmen.',
-                    p3: 'Während seiner Karriere als Berater arbeitete Kiflay für Start-ups, kleine und mittlere Unternehmen sowie internationale Konzerne und die Schweizer Regierung in verschiedenen Bereichen.',
-                    p4: 'Kiflays Leben und Karriere boten den perfekten experimentellen Spielplatz, um seine unternehmerischen und Leadership-Fähigkeiten zu entwickeln. Kiflay blüht im Umgang mit Menschen auf und hilft ihnen, jeder Herausforderung zu begegnen.',
-                    p5: 'Kiflay ist überzeugt, dass die Realität faszinierender ist als der Traum, solange wir mutig auf unsere Träume zugehen. Für ihn bedeutet Pionierarbeit, sich selbst und die Welt durch unermüdliche Entschlossenheit zum Besseren zu verändern.',
-                    p6: 'Im Bewusstsein, dass persönliche Weisheit und professionelle Reife grenzenlos sind, verbrachte er fast ein Jahr mit Backpacking durch verschiedene Kulturen und Kontinente und absolviert derzeit seinen EMBA in «Harnessing Innovation» an der EPFL.',
-                    highlight: 'Er würde sich freuen, dich kennenzulernen – zögere nicht, uns zu kontaktieren.',
-                    philosophy1: 'Loving Kindness, Courage und Resilience sind einige meiner liebsten Worte. Diese Worte haben eine so tiefe Bedeutung in meinem Leben, dass sie mir helfen, eine bessere Person und ein besserer Bewohner dieses Planeten zu werden.',
-                    philosophy2: 'Ich glaube, dass Loving Kindness uns erlaubt, einander zu respektieren und in unseren Erfolgen demütig zu bleiben. Courage ist der Kern, dem zu folgen, was unser Herz sucht. Resilience erlaubt es uns, die schwierigen Situationen in unserem Leben und Geschäft zu überwinden.',
-                    question: 'Was ist deine Inspiration fürs Leben?'
-                },
-                testimonial: {
-                    quote: '“Was ist deine Inspiration fürs Leben? Loving Kindness, Courage und Resilience sind einige meiner liebsten Worte. Diese Worte haben eine so tiefe Bedeutung in meinem Leben, dass sie mir helfen, eine bessere Person und ein besserer Bewohner dieses Planeten zu werden.”'
-                },
-                contact: {
-                    eyebrow: 'Kontakt',
-                    title: 'Lass uns zusammenarbeiten',
-                    subtitle: 'Bereit, deine Gegenwart für eine blühende Zukunft zu erschüttern? Melde dich und lass uns ins Gespräch kommen.',
-                    infoTitle: 'Gespräch beginnen',
-                    infoText: 'Ob strategische Beratung, Innovations-Consulting oder Leadership-Coaching — ich würde mich freuen, dich kennenzulernen und zu erkunden, wie wir zusammenarbeiten können.'
-                }
-            }
-        };
-
-        let currentLang = 'en';
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                const keys = key.split('.');
-                let value = i18n[lang];
-                for (const k of keys) {
-                    if (value && value[k] !== undefined) {
-                        value = value[k];
-                    } else {
-                        value = undefined;
-                        break;
-                    }
-                }
-                if (value !== undefined) {
-                    el.innerHTML = value;
-                }
-            });
-
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-            });
-
-            localStorage.setItem('inspireimpact-lang', lang);
-        }
-
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lang = btn.getAttribute('data-lang');
-                if (lang !== currentLang) {
-                    setLanguage(lang);
-                }
-            });
-        });
-
-        const savedLang = localStorage.getItem('inspireimpact-lang');
-        if (savedLang && savedLang !== currentLang) {
-            setLanguage(savedLang);
-        }
-
-        // ================================================================
-        // LOADING SCREEN
-        // ================================================================
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('hidden');
-            }, 2200);
-        });
-
-        // ================================================================
-        // MAGNETIC BUTTON EFFECT
-        // ================================================================
-        document.querySelectorAll('.magnetic').forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                el.style.transform = 'translate(' + (x * 0.3) + 'px, ' + (y * 0.3) + 'px)';
-            });
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = 'translate(0, 0)';
-            });
-        });
-
-        // ================================================================
-        // SCROLL PROGRESS BAR
-        // ================================================================
-        const scrollProgress = document.getElementById('scroll-progress');
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (scrollTop / docHeight) * 100;
-            scrollProgress.style.width = progress + '%';
-        });
-
-        // ================================================================
-        // NAVIGATION SCROLL STATE
-        // ================================================================
-        const nav = document.getElementById('nav');
+        // 1. Dynamic Header State on Scroll
+        const header = document.getElementById('main-header');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
+                header.classList.add('scrolled');
             } else {
-                nav.classList.remove('scrolled');
+                header.classList.remove('scrolled');
             }
         });
 
-        // ================================================================
-        // MOBILE MENU
-        // ================================================================
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+        // 2. Scroll Reveal Engine (Intersection Observer)
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
-            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
-        });
-
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                mobileMenu.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-        });
-
-        // ================================================================
-        // SCROLL REVEAL (Intersection Observer)
-        // ================================================================
-        const revealObserver = new IntersectionObserver((entries) => {
+        const revealObserver = new IntersectionObserver(function(entries, observer) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    revealObserver.unobserve(entry.target);
+                    // Sobald das Element sichtbar ist, stoppen wir die Überwachung für dieses Element
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        }, revealOptions);
 
-        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .value-card, .testimonial-quote, .testimonial-author, .contact-section-inner').forEach(el => {
-            revealObserver.observe(el);
+        revealElements.forEach(element => {
+            revealObserver.observe(element);
         });
 
-        document.querySelectorAll('.value-card').forEach((card, i) => {
-            card.style.transitionDelay = (i * 0.15) + 's';
-        });
-
-        // ================================================================
-        // PARALLAX EFFECT
-        // ================================================================
-        const heroVideo = document.querySelector('.hero-video');
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            if (heroVideo && scrolled < window.innerHeight) {
-                heroVideo.style.transform = 'translateY(' + (scrolled * 0.3) + 'px)';
-            }
-        });
-
-        // ================================================================
-        // SMOOTH SCROLL FOR ANCHOR LINKS
-        // ================================================================
+        // 3. Smooth Scrolling for Anchor Links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 }
             });
         });
