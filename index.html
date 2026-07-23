@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InspireImpact</title>
     <meta name="description" content="InspireImpact - We shake your present for a flourishing future. Strategy, Innovation & Leadership Consulting.">
-    <link rel="icon" type="image/png" href="https://www.image2url.com/r2/default/images/1782286501821-16adcfb9-959f-4cb0-a49c-18bb3f939adc.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI0ZEN0YzOCIvPjx0ZXh0IHg9IjE2IiB5PSIyNCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsJ1RpbWVzIE5ldyBSb21hbicsc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiMwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkk8L3RleHQ+PC9zdmc+">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -105,10 +105,9 @@
         /* Loader */
         .loader { position: fixed; inset: 0; background: var(--bg-primary); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s var(--ease-out-expo), visibility 0.8s; }
         .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-logo { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 2rem; overflow: hidden; text-transform: uppercase; }
-        .loader-logo span { display: inline-block; opacity: 0; transform: translateY(100%); animation: loaderCharReveal 0.6s var(--ease-out-expo) forwards; }
-        .loader-logo .brand-i { font-size: 1.35em; line-height: 1; display: inline-block; transform: translateY(0.02em); }
-        @keyframes loaderCharReveal { to { opacity: 1; transform: translateY(0); } }
+        .loader-logo { margin-bottom: 2rem; overflow: hidden; }
+        .loader-logo img { height: clamp(2.5rem, 6vw, 4rem); width: auto; display: block; opacity: 0; transform: translateY(100%); animation: loaderLogoReveal 0.8s var(--ease-out-expo) 0.2s forwards; filter: brightness(0) saturate(100%) invert(58%) sepia(93%) saturate(2580%) hue-rotate(348deg) brightness(101%) contrast(99%); }
+        @keyframes loaderLogoReveal { to { opacity: 1; transform: translateY(0); } }
         .loader-track { width: 200px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; position: relative; }
         .loader-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--accent); animation: loaderProgress 2s var(--ease-out-expo) forwards; box-shadow: 0 0 20px var(--accent-glow); }
         @keyframes loaderProgress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
@@ -329,7 +328,7 @@
     <!-- Loader -->
     <div class="loader" id="loader">
         <div class="loader-logo">
-            <span class="brand-i" style="animation-delay:0s">I</span><span style="animation-delay:0.05s">N</span><span style="animation-delay:0.1s">S</span><span style="animation-delay:0.15s">P</span><span style="animation-delay:0.2s">I</span><span style="animation-delay:0.25s">R</span><span style="animation-delay:0.3s">E</span><span class="brand-i" style="animation-delay:0.35s">I</span><span style="animation-delay:0.4s">M</span><span style="animation-delay:0.45s">P</span><span style="animation-delay:0.5s">A</span><span style="animation-delay:0.55s">C</span><span style="animation-delay:0.6s">T</span>
+            <img src="https://www.image2url.com/r2/default/images/1782286501821-16adcfb9-959f-4cb0-a49c-18bb3f939adc.png" alt="InspireImpact">
         </div>
         <div class="loader-track">
             <div class="loader-fill"></div>
